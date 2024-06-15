@@ -24,15 +24,12 @@
 //     console.log(`Server is running on port ${PORT}`);
 // });
 
-
-
-
-const express = require('express');
-const path = require('path');
-const axios = require('axios');
-const cookieParser = require('cookie-parser');
-const qs = require('qs');
-require('dotenv').config();
+const express = require("express");
+const path = require("path");
+const axios = require("axios");
+const cookieParser = require("cookie-parser");
+const qs = require("qs");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,69 +39,86 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
 // Set view engine to EJS
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 // Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware to parse cookies
 app.use(cookieParser());
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('pages/home');
+app.get("/", (req, res) => {
+  res.render("pages/home");
 });
 
-app.get('/explore', (req, res) => {
-    res.render('pages/explore');
+app.get("/explore", (req, res) => {
+  res.render("pages/explore");
 });
 
-app.get('/login', (req, res) => {
-    const scope = 'user-read-private user-read-email user-read-playback-state streaming';
-    const params = qs.stringify({
-        client_id: CLIENT_ID,
-        response_type: 'code',
-        redirect_uri: REDIRECT_URI,
-        scope: scope
-    });
-
-    res.redirect(`https://accounts.spotify.com/authorize?${params}`);
+// Định tuyến cho trang kết quả tìm kiếm
+app.get('/search-results', (req, res) => {
+  res.render('pages/search-results');
+});
+// Định tuyến cho trang kết quả tìm kiếm
+app.get('/page-track-info', (req, res) => {
+  res.render('pages/page-track-info');
 });
 
-app.get('/callback', async (req, res) => {
-    const code = req.query.code || null;
-    const data = {
-        code: code,
-        redirect_uri: REDIRECT_URI,
-        grant_type: 'authorization_code',
-    };
+app.get("/login", (req, res) => {
+  const scope =
+    "user-read-private user-read-email user-read-playback-state streaming";
+  const params = qs.stringify({
+    client_id: CLIENT_ID,
+    response_type: "code",
+    redirect_uri: REDIRECT_URI,
+    scope: scope,
+  });
 
-    const headers = {
-        headers: {
-            'Authorization': 'Basic ' + Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'),
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-    };
+  res.redirect(`https://accounts.spotify.com/authorize?${params}`);
+});
 
-    try {
-        const response = await axios.post('https://accounts.spotify.com/api/token', qs.stringify(data), headers);
-        const accessToken = response.data.access_token;
-        res.cookie('access_token', accessToken);
-        res.redirect('/explore');
-    } catch (error) {
-        res.send(error);
-    }
+app.get('/callback', (req, res) => {
+  res.render('pages/callback');
+});
+
+app.get("/callback", async (req, res) => {
+  const code = req.query.code || null;
+  const data = {
+    code: code,
+    redirect_uri: REDIRECT_URI,
+    grant_type: "authorization_code",
+  };
+
+  const headers = {
+    headers: {
+      Authorization:
+        "Basic " +
+        Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  };
+
+  try {
+    const response = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      qs.stringify(data),
+      headers,
+    );
+    const accessToken = response.data.access_token;
+    res.cookie("access_token", accessToken);
+    res.redirect("/explore");
+  } catch (error) {
+    res.send(error);
+  }
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
-
-
-
-// const client_id = '1825746372a54d109f5b454536f999ab'; 
+// const client_id = '1825746372a54d109f5b454536f999ab';
 // const client_secret = '214b213916b04801809c7e7c824bd898';
 
 // async function getToken() {
@@ -136,5 +150,3 @@ app.listen(PORT, () => {
 //     console.log(profile)
 //   })
 // });
-
-
