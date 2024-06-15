@@ -7,14 +7,31 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      .filter-bar {
+        display: flex;
+       
+        
+      }
+      .filter{
+        padding:0.5em 1em;
+        border-radius: 30%;
+        background-color:transparent;
+      }
+
+      .filter + .filter {
+        margin-left: 5px;
+        
+      }
+    </style>
   </head>
   <body>
-    <div>
-      <button onclick="filterResults('all')">All</button>
-      <button onclick="filterResults('tracks')">Songs</button>
-      <button onclick="filterResults('albums')">Albums</button>
-      <button onclick="filterResults('artists')">Artists</button>
-      <button onclick="filterResults('playlists')">Playlists</button>
+    <div class="filter-bar">
+      <button onclick="filterResults('all')" class="filter">All</button>
+      <button onclick="filterResults('tracks') "class="filter">Songs</button>
+      <button onclick="filterResults('albums')"class="filter">Albums</button>
+      <button onclick="filterResults('artists')"class="filter">Artists</button>
+      <button onclick="filterResults('playlists')"class="filter">Playlists</button>
     </div>
     <div class="searchre" id="results"></div>
     

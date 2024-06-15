@@ -120,14 +120,14 @@
           </div>
 
           <div class="search">
-            <i class="bx bx-search"></i>
+            
             <input
               type="text"
               id="searchQuery"
               placeholder="Type here to search"
             />
             <i class="bx bx-x-circle"></i>
-            <button onclick="searchSpotify()">Tìm kiếm</button>
+            <button onclick="searchSpotify()" style="background-color:transparent;display:flex;align-items:center; height:20px;"><i class="bx bx-search"></i></button>
           </div>
         </header>
 
@@ -346,13 +346,13 @@
 
       <div class="right-section">
       <button id="loginWithSpotify">Đăng nhập với Spotify</button>
-      <div>
+      <!-- <div>
           <button onclick="filterResults('all')">All</button>
           <button onclick="filterResults('tracks')">Songs</button>
           <button onclick="filterResults('albums')">Albums</button>
           <button onclick="filterResults('artists')">Artists</button>
           <button onclick="filterResults('playlists')">Playlists</button>
-      </div>
+      </div> -->
 
         <div class="profile">
           <i class="bx bxs-bell"></i>

@@ -777,6 +777,19 @@ function displayAllResults(data) {
     });
   }
 
+  //randomize sắc màu
+  function getRandomRGBValue() {
+    const red =  Math.floor(Math.random() * 256);
+    const green =  Math.floor(Math.random() * 256);
+    const blue = Math.floor(Math.random() * 256);
+    return`rgb(${red}, ${green}, ${blue})`;
+  }
+  function setRandomBackgroundColor(element, rgbColor) { 
+    element.style.backgroundColor = rgbColor;
+}
+function resetBackgroundColor(element) {
+  element.style.backgroundColor = 'transparent';
+}
   // Songs
   if (data.tracks && data.tracks.items.length > 0) {
     const songsDiv = document.createElement("div");
@@ -785,6 +798,10 @@ function displayAllResults(data) {
     data.tracks.items.forEach((track) => {
       const songItem = document.createElement("div");
       songItem.classList.add("song-item");
+      songItem.style="display:flex;justify-content:space-between;padding: 1em 0; padding-left: 1em;border-radius: 10px;"
+      const rgbColor = getRandomRGBValue()
+      songItem.addEventListener('mouseover', (e)=>{setRandomBackgroundColor(songItem, rgbColor)});
+      songItem.addEventListener('mouseleave', (e)=>{resetBackgroundColor(songItem)});
       songItem.innerHTML = `
         <div style="display:flex;width:70%">
         <img src="${track.album.images && track.album.images[0] ? track.album.images[0].url : "default-image-url"}" alt="${track.name}">
@@ -816,20 +833,29 @@ function displayAllResults(data) {
     const artistsDiv = document.createElement("div");
     artistsDiv.classList.add("artists");
     artistsDiv.innerHTML = "<h2>Artists</h2>";
+
+    const artistContainer = document.createElement("div")
+    
     data.artists.items.forEach((artist) => {
       const artistItem = document.createElement("div");
+      artistItem.style="padding:1em;border-radius:10px;border-top-left-radius:50%;border-top-right-radius:50%;"
+      const rgbColor = getRandomRGBValue()
+      artistItem.addEventListener('mouseover', (e)=>{setRandomBackgroundColor(artistItem, rgbColor)});
+      artistItem.addEventListener('mouseleave', (e)=>{resetBackgroundColor(artistItem)});
+
       artistItem.classList.add("artist-item");
       artistItem.innerHTML = `
         <img src="${artist.images && artist.images[0] ? artist.images[0].url : "default-image-url"}" alt="${artist.name}">
         <h3>${artist.name}</h3>
       `;
-      artistsDiv.appendChild(artistItem);
+      artistContainer.appendChild(artistItem);
 
       // Add click event for artist
       artistItem.addEventListener("click", () => {
         displayArtistInfo(artist);
       });
     });
+    artistsDiv.appendChild(artistContainer)
     resultsDiv.appendChild(artistsDiv);
   }
 
@@ -838,23 +864,31 @@ function displayAllResults(data) {
     const albumsDiv = document.createElement("div");
     albumsDiv.classList.add("albums");
     albumsDiv.innerHTML = "<h2>Albums</h2>";
+
+    const albumContainer = document.createElement("div")
     data.albums.items.forEach((album) => {
       const albumItem = document.createElement("div");
+      albumItem.style="padding:1em;border-radius:10px;";
+      const rgbColor = getRandomRGBValue()
+      albumItem.addEventListener('mouseover', (e)=>{setRandomBackgroundColor(albumItem, rgbColor)});
+      albumItem.addEventListener('mouseleave', (e)=>{resetBackgroundColor(albumItem)});
       albumItem.classList.add("album-item");
+
       albumItem.innerHTML = `
         <img src="${album.images && album.images[0] ? album.images[0].url : "default-image-url"}" alt="${album.name}">
         <div>
-          <h3>${album.name}</h3>
+          <h3 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${album.name}</h3>
           <p>${album.artists.map((artist) => artist.name).join(", ")}</p>
         </div>
       `;
-      albumsDiv.appendChild(albumItem);
+      albumContainer.appendChild(albumItem);
 
       // Add click event for album
       albumItem.addEventListener("click", () => {
         displayAlbumInfo(album.id);
       });
     });
+    albumsDiv.appendChild(albumContainer)
     resultsDiv.appendChild(albumsDiv);
   }
 
@@ -863,23 +897,25 @@ function displayAllResults(data) {
     const playlistsDiv = document.createElement("div");
     playlistsDiv.classList.add("playlists");
     playlistsDiv.innerHTML = "<h2>Playlists</h2>";
+    const playlistContainer = document.createElement("div")
     data.playlists.items.forEach((playlist) => {
       const playlistItem = document.createElement("div");
       playlistItem.classList.add("playlist-item");
       playlistItem.innerHTML = `
         <img src="${playlist.images && playlist.images[0] ? playlist.images[0].url : "default-image-url"}" alt="${playlist.name}">
         <div>
-          <h3>${playlist.name}</h3>
+          <h3 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${playlist.name}</h3>
           <p>By ${playlist.owner.display_name}</p>
         </div>
       `;
-      playlistsDiv.appendChild(playlistItem);
+      playlistContainer.appendChild(playlistItem);
 
       // Add click event for playlist
       playlistItem.addEventListener("click", () => {
         displayPlaylistInfo(playlist.id);
       });
     });
+    playlistsDiv.appendChild(playlistContainer)
     resultsDiv.appendChild(playlistsDiv);
   }
 }
@@ -989,7 +1025,7 @@ async function displayAlbumInfo(albumId) {
       trackItem.innerHTML = `
         <div class="track-index">${index + 1}</div>
         <div class="track-info">
-          <div class="track-title">${track.name}</div>
+          <div class="track-title" >${track.name}</div>
           <div class="track-artists">${track.artists.map((artist) => artist.name).join(", ")}</div>
           <div class="track-duration">${formatDuration(track.duration_ms)}</div>
         </div>
