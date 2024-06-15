@@ -900,6 +900,7 @@ function resetBackgroundColor(element) {
     const playlistContainer = document.createElement("div")
     data.playlists.items.forEach((playlist) => {
       const playlistItem = document.createElement("div");
+      playlistItem.style="padding:1em;border-radius:10px;"
       const rgbColor = getRandomRGBValue()
       playlistItem.addEventListener('mouseover', (e)=>{setRandomBackgroundColor(playlistItem, rgbColor)});
       playlistItem.addEventListener('mouseleave', (e)=>{resetBackgroundColor(playlistItem)});
