@@ -786,15 +786,21 @@ function displayAllResults(data) {
       const songItem = document.createElement("div");
       songItem.classList.add("song-item");
       songItem.innerHTML = `
+        <div style="display:flex;width:70%">
         <img src="${track.album.images && track.album.images[0] ? track.album.images[0].url : "default-image-url"}" alt="${track.name}">
         <div>
           <h3>${track.name}</h3>
           <p>${track.artists.map((artist) => artist.name).join(", ")}</p>
         </div>
-        <p>${formatDuration(track.duration_ms)}</p>
+        </div>
+        
       `;
-      addLikeButton(track, songItem);
-      addPlaylistDropdown(track, songItem);
+      const rightSection = document.createElement('div')
+      rightSection.innerHTML=`<p>${formatDuration(track.duration_ms)}</p>`
+      rightSection.style = "display: flex;justify-content: flex-end;"
+      addLikeButton(track, rightSection);
+      addPlaylistDropdown(track, rightSection);
+      songItem.appendChild(rightSection)
       songsDiv.appendChild(songItem);
 
       // Add click event for song
